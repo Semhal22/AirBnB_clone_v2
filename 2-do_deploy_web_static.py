@@ -33,12 +33,12 @@ def do_deploy(archive_path):
 
     put(archive_path, "/tmp/")
     folder = "/data/web_static/releases/web_static_20240406151125"
-    run(f"mkdir -p {folder}")
-    run(f"tar -xzf /tmp/web_static_20240406151125.tgz -C {folder}")
+    run(f"mkdir -p {folder}/")
+    run(f"tar -xzf /tmp/web_static_20240406151125.tgz -C {folder}/")
     run(f"mv {folder}/web_static/* {folder}/")
     run(f"rm -rf {folder}/web_static")
     run("rm /tmp/web_static_20240406151125.tgz")
     run("rm -rf /data/web_static/current")
-    run(f"ln -s {folder} /data/web_static/current")
+    run(f"ln -s {folder}/ /data/web_static/current")
 
     return True
