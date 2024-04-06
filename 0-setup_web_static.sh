@@ -15,7 +15,8 @@ cat <<EOF > /data/web_static/releases/test/index.html
 </html>
 EOF
 ln -sf /data/web_static/releases/test/ /data/web_static/current
-chown -R ubuntu:ubuntu /data/
+chown -R ubuntu /data/
+chgrp -R ubuntu /data/
 cat <<EOF > /etc/nginx/sites-enabled/default
 server {
         listen 80 default_server;
@@ -24,7 +25,8 @@ server {
         server_name _;
 
         location /hbnb_static {
-		alias /data/web_static/current/; 
+		alias /data/web_static/current/;
+		index index.html index.htm 
         }
 }
 EOF
