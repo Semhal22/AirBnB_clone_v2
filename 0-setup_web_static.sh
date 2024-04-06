@@ -30,4 +30,4 @@ server {
         }
 }
 EOF
-nginx -s reload
+service nginx restart
