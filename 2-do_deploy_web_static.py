@@ -31,14 +31,32 @@ def do_deploy(archive_path):
     if not os.path.exists(archive_path):
         return False
 
-    put(archive_path, "/tmp/")
-    folder = "/data/web_static/releases/web_static_20240406151125"
-    run(f"mkdir -p {folder}/")
-    run(f"tar -xzf /tmp/web_static_20240406151125.tgz -C {folder}/")
-    run(f"mv {folder}/web_static/* {folder}/")
-    run(f"rm -rf {folder}/web_static")
-    run("rm /tmp/web_static_20240406151125.tgz")
-    run("rm -rf /data/web_static/current")
-    run(f"ln -s {folder}/ /data/web_static/current")
+    full_name = archive_path.split('/')[1]
+    name = full_name.split('.')[0]
+
+    if put(archive_path, f"/tmp/{full_name}").failed:
+        return False
+
+    if run(f"rm -rf /data/web_static/releases/{name}/").failed:
+        return False
+
+    if run(f"mkdir -p /data/web_static/releases/{name}/").failed:
+        return False
+
+    if run(f"tar -xzf /tmp/{full_name} -C\
+            /data/web_static/releases/{name}/").failed:
+        return False
+    if run(f"mv /data/web_static/releases/{name}/web_static/*\
+            /data/web_static/releases/{name}/").failed:
+        return False
+    if run(f"rm -rf /data/web_static/releases/{name}/web_static").failed:
+        return False
+    if run(f"rm /tmp/{full_name}").failed:
+        return False
+    if run("rm -rf /data/web_static/current").failed:
+        return False
+    if run(f"ln -s /data/web_static/releases/{name}/\
+            /data/web_static/current").failed:
+        return False
 
     return True
